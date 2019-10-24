@@ -118,3 +118,51 @@ window.addEventListener('hashchange', ev => {
 if (!window.location.hash.slice(1)) {
     getProducts()
 }
+
+// const sort = () => {
+//     let table, rows, switching, i, x, y, shouldSwitch;
+//     table = document.querySelector('table');
+//     switching = true;
+//     while (switching) {
+//         switching = false;
+//         rows = table.rows;
+//         for (let i = 0; i < (rows.length - 1); i++) {
+//             shouldSwitch = false;
+//             x = rows[i].getElementsByTagName('TD')[0];
+//             y = rows[i + 1].getElementsByTagName('TD')[0];
+
+//             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+//                 shouldSwitch = true;
+//                 break;
+//             }
+//         }
+//         if (shouldSwitch) {
+//             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+//             switching = true;
+//         }
+//     }
+// }
+
+const sort = () => {
+    const table = document.querySelector('tbody');
+    const rows = [...table.querySelectorAll('tr')];
+    const newRows = rows.sort((tr1, tr2) => { 
+        if (tr1.children[1].innerHTML > tr2.children[1].innerHTML) { // better to give each tabledata a class and then
+            // queryslectorall on the class
+            return 1
+        }
+        else {
+            return -1
+        }
+    })
+    table.innerHTML = '';
+
+    newRows.forEach(row => {
+        table.appendChild(row);
+    })
+}
+
+// const sort = (arg) => {
+//     const table = document.querySelector('tbody');
+//     const rows = [...table.querySelectorAll('tr')];
+// }
