@@ -24,28 +24,43 @@ const renderProdcuts = products => {
     const html = products.map(product => 
         // eslint-disable-next-line no-unused-expressions
         `<tr>
-            <td>${product.id}</td>
-            <td>${product.name}</td>
-            <td>${product.description}</td>
-            <td>${product.suggestedPrice}</td>
-            <td>${product.createdAt}</td>
-            <td>${product.updatedAt}</td>
+            <td class='id'>${product.id}</td>
+            <td class='name'>${product.name}</td>
+            <td class='description'>${product.description}</td>
+            <td class='suggestedPrice'>${product.suggestedPrice}</td>
+            <td class='created'>${product.createdAt}</td>
+            <td class='updated'>${product.updatedAt}</td>
         </tr>`
     ).join('')
 
     results.innerHTML = `<table class = 'table table-striped'>
     <thead>
     <tr>
-        <th scope='col'>Id</th>
-        <th scope='col'>Name</th>
-        <th scope='col'>Description</th>
-        <th scope='col'>Suggested Price</th>
-        <th scope='col'>CreatedAt</th>
-        <th scope='col'>UpdatedAt</th>
+        <th data-type ='id' class='id' scope='col'>Id</th>
+        <th data-type ='name' class='name' scope='col'>Name</th>
+        <th data-type ='description' class='description' scope='col'>Description</th>
+        <th data-type ='suggestedPrice' class='suggestedPrice' scope='col'>Suggested Price</th>
+        <th data-type ='created' class='created' scope='col'>CreatedAt</th>
+        <th data-type ='updated' class='updated' scope='col'>UpdatedAt</th>
     </tr>
     </thead>
     <tbody>${html}</tbody>
     </table>`
+
+    let sortedBy = ''
+
+    const tableHead = document.querySelector('thead');
+    tableHead.addEventListener('click', ev => {
+        const filter = ev.target.dataset.type;
+        if (sortedBy === false || sortedBy !== filter) {
+            sort(filter);
+            sortedBy = filter;
+        }
+        else if (sortedBy === filter) {
+            revSort(filter)
+        }
+
+    })
 
 }
 
@@ -55,54 +70,47 @@ const renderCompanies = companies => {
     const header = document.querySelector('h2');
     header.innerHTML = 'Companies'
 
-
-    // const html = companies.map(company =>
-    //     `<div class='company row'>
-    //     <div class='col'>${company.id}</div>
-    //     <div class='col'>${company.name}</div>
-    //     <div class='col'>${company.phone}</div>
-    //     <div class='col'>${company.state}</div>
-    //     <div class='col'>${company.catchPhrase}</div>
-    //     <div class='col'>${company.createdAt}</div>
-    //     <div class='col'>${company.updatedAt}</div>
-    // </div>`
-    // ).join('');
-
     const html = companies.map(company =>
         `<tr>
-        <td>${company.id}</td>
-        <td>${company.name}</td>
-        <td>${company.phone}</td>
-        <td>${company.state}</td>
-        <td>${company.catchPhrase}</td>
-        <td>${company.createdAt}</td>
-        <td>${company.updatedAt}</td>
+        <td class='id'>${company.id}</td>
+        <td class='name'>${company.name}</td>
+        <td class='phone'>${company.phone}</td>
+        <td class='state'>${company.state}</td>
+        <td class='phrase'>${company.catchPhrase}</td>
+        <td class='created'>${company.createdAt}</td>
+        <td class='updated'>${company.updatedAt}</td>
     </tr>`
     ).join('');
-
-    // results.innerHTML = `<div class='col'>Id</div>
-    // <div class='col'>Name</div>
-    // <div class='col'>Phone</div>
-    // <div class='col'>State</div>
-    // <div class='col'>CatchPhrase</div>
-    // <div class='col'>CreatedAt</div>
-    // <div class='col'>UpdatedAt</div>
-    // ${html}`
 
     results.innerHTML = `<table class = 'table table-striped'>
     <thead>
     <tr>
-        <th scope='col'>Id</th>
-        <th scope='col'>Name</th>
-        <th scope='col'>Phone</th>
-        <th scope='col'>State</th>
-        <th scope='col'>CatchPhrase</th>
-        <th scope='col'>CreatedAt</th>
-        <th scope='col'>UpdatedAt</th>
+        <th data-type='id' class='id' scope='col'>Id</th>
+        <th data-type='name' class='name' scope='col'>Name</th>
+        <th data-type='phone' class='phone' scope='col'>Phone</th>
+        <th data-type='state' class='state' scope='col'>State</th>
+        <th data-type='phrase' class='phrase' scope='col'>CatchPhrase</th>
+        <th data-type='created' class='created' scope='col'>CreatedAt</th>
+        <th data-type='updated' class='updated' scope='col'>UpdatedAt</th>
     </tr>
     </thead>
     <tbody>${html}</tbody>
     </table>`
+
+    let sortedBy = ''
+
+    const tableHead = document.querySelector('thead');
+    tableHead.addEventListener('click', ev => {
+        const filter = ev.target.dataset.type;
+        if (sortedBy === false || sortedBy !== filter) {
+            sort(filter);
+            sortedBy = filter;
+        }
+        else if (sortedBy === filter) {
+            revSort(filter)
+        }
+
+    })
 }
 
 window.addEventListener('hashchange', ev => {
@@ -119,36 +127,12 @@ if (!window.location.hash.slice(1)) {
     getProducts()
 }
 
-// const sort = () => {
-//     let table, rows, switching, i, x, y, shouldSwitch;
-//     table = document.querySelector('table');
-//     switching = true;
-//     while (switching) {
-//         switching = false;
-//         rows = table.rows;
-//         for (let i = 0; i < (rows.length - 1); i++) {
-//             shouldSwitch = false;
-//             x = rows[i].getElementsByTagName('TD')[0];
-//             y = rows[i + 1].getElementsByTagName('TD')[0];
 
-//             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-//                 shouldSwitch = true;
-//                 break;
-//             }
-//         }
-//         if (shouldSwitch) {
-//             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-//             switching = true;
-//         }
-//     }
-// }
-
-const sort = () => {
+const sort = filter => {
     const table = document.querySelector('tbody');
     const rows = [...table.querySelectorAll('tr')];
-    const newRows = rows.sort((tr1, tr2) => { 
-        if (tr1.children[1].innerHTML > tr2.children[1].innerHTML) { // better to give each tabledata a class and then
-            // queryslectorall on the class
+    const newRows = rows.sort((tr1, tr2) => {
+        if (tr1.querySelector(`.${filter}`).innerHTML > tr2.querySelector(`.${filter}`).innerHTML) {
             return 1
         }
         else {
@@ -158,11 +142,43 @@ const sort = () => {
     table.innerHTML = '';
 
     newRows.forEach(row => {
-        table.appendChild(row);
+        table.appendChild(row)
     })
 }
 
-// const sort = (arg) => {
+const revSort = filter => {
+    const table = document.querySelector('tbody');
+    const rows = [...table.querySelectorAll('tr')];
+    const newRows = rows.sort((tr1, tr2) => {
+        if (tr1.querySelector(`.${filter}`).innerHTML > tr2.querySelector(`.${filter}`).innerHTML) {
+            return 1
+        }
+        else {
+            return -1
+        }
+    }).reverse();
+    table.innerHTML = '';
+
+    newRows.forEach(row => {
+        table.appendChild(row)
+    })
+}
+
+// const sortTemplate = () => {
 //     const table = document.querySelector('tbody');
 //     const rows = [...table.querySelectorAll('tr')];
+//     const newRows = rows.sort((tr1, tr2) => { 
+//         if (tr1.children[1].innerHTML > tr2.children[1].innerHTML) { // better to give each tabledata a class and then
+//             // queryslectorall on the class
+//             return 1
+//         }
+//         else {
+//             return -1
+//         }
+//     })
+//     table.innerHTML = '';
+
+//     newRows.forEach(row => {
+//         table.appendChild(row);
+//     })
 // }
